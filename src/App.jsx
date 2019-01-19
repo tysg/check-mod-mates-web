@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { all } from 'q';
 
 // const key = get_token()[0]; // key is constant
 //***REMOVED*** = get_token()[1];
@@ -35,6 +36,32 @@ const module_list = [
     'CS1231',
 ];
 
+// Assume we also have the namelist which has the same order as module_list
+const name_lists = [
+    [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+    ],
+    [
+        "1",
+        "2",
+        "5",
+        "6",
+        "7",
+    ],
+    [
+        "1",
+        "3",
+        "4",
+        "6",
+    ],
+]
+
 function Toggle(props) {
     return (
         <button onClick={props.onClick}>
@@ -61,9 +88,29 @@ class App extends Component {
 
         this.setState(
             { buttonState: buttonState_copy });
+    }
 
+    findIntersection() {
+        // refer to the global name_list var, and compare with buttonState
+        // return the intersection in an array
+        const selectedLists = []
+        for (let i = 0; i < this.state.buttonState.length; i++) {
+            if (this.state.buttonState[i]) {
+                selectedLists.push(name_lists[i]);
+            }
+        }
 
-        // return;
+        console.log(selectedLists);
+        try {
+            return selectedLists.reduce(
+                (accum, current) => accum.filter(x => current.includes(x))
+            )
+        }
+
+        catch (TypeError) {
+            return "Type Error";
+        }
+
     }
 
     render() {
@@ -92,6 +139,7 @@ class App extends Component {
 
                 <div>
                     {/* list of namesd here */}
+                    {this.findIntersection()}
                 </div>
             </div>
 
