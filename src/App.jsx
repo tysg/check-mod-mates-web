@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import token from './token.js'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+// import token from './token.js'
 import './App.css';
+import queryString from 'query-string'
 import { all } from 'q';
 
 const key = "EKCnWpNMgPfzGr9psFhqq"; // key is constant
-
-const module_call = "https://ivle.nus.edu.sg/api/Lapi.svc/Modules?APIKey=" +
-    key + "&AuthToken=" +
-    token + "&Duration=10&IncludeAllInfo=false";
 
 function Toggle(props) {
     return (
@@ -71,9 +67,7 @@ class Content extends Component {
                     {/* list of namesd here */}
                     {this.findIntersection()}
                 </div>
-                <div>
-                    <a href={module_call}>Press here for magic</a>
-                </div>
+
             </div>
         )
 
@@ -97,7 +91,15 @@ class App extends Component {
 
     }
 
-    initialize(url) {
+
+    initialize() {
+        const token = queryString.parse(this.props.token).token
+        console.log(token);
+
+        const url = "https://ivle.nus.edu.sg/api/Lapi.svc/Modules?APIKey=" +
+            key + "&AuthToken=" +
+            token + "&Duration=10&IncludeAllInfo=false";
+
         return fetch(url)
             .then(resp => resp.json())
             .then(data => {
@@ -116,7 +118,10 @@ class App extends Component {
 
 
     getNamelist() {
+        const token = queryString.parse(this.props.token).token
+        console.log(token);
         const urls = id => "https://ivle.nus.edu.sg/API/Lapi.svc/Class_Roster?APIKey=" + key + "&AuthToken=" + token + "&CourseID=" + id
+
 
 
         this.state.ID.map(
@@ -152,7 +157,7 @@ class App extends Component {
         return (
             <div>
                 <div className="main">
-                    <button onClick={() => this.initialize(module_call)}>Refresh</button>
+                    <button onClick={() => this.initialize()}>Refresh</button>
                 </div>
 
 
