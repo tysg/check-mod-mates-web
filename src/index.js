@@ -1,17 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import './index.css';
+import Home from './Home';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 
 
-
-
 ReactDOM.render((<BrowserRouter>
+    <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/auth/:token" component={App} />
+    </Switch>
     <div>
-        <App token={window.location.search} />
+
+        {/* <App token={window.location.search} /> */}
     </div>
 </BrowserRouter>), document.getElementById('root'));
 

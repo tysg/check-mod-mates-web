@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-// import token from './token.js'
-import './App.css';
 import queryString from 'query-string'
-import { all } from 'q';
+import './App.css';
 
 const key = "EKCnWpNMgPfzGr9psFhqq"; // key is constant
 
