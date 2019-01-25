@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import queryString from 'query-string'
 import './App.css';
+import { Button, Label } from 'semantic-ui-react'
 
 const key = "EKCnWpNMgPfzGr9psFhqq"; // key is constant
 
 function Toggle(props) {
     return (
-        <button onClick={props.onClick}>
-            {props.content} {props.isToggleOn ? 'ON' : 'OFF'}
-        </button>
-
+        <Button active={props.isToggleOn} onClick={props.onClick}>
+            {props.content}
+        </Button>
     );
 }
 
@@ -36,9 +36,20 @@ class Content extends Component {
         }
 
         catch (TypeError) {
-            return "Type Error";
+            return;
         }
 
+    }
+
+    renderLabels(array) {
+        if (array) {
+            console.log(typeof (array))
+            return array.map(
+                (value, index) => {
+                    return (<Label key={index}>{value}</Label>)
+                }
+            )
+        }
     }
 
     componentDidMount() {
@@ -66,7 +77,7 @@ class Content extends Component {
                 </div>
                 <div>
                     {/* list of namesd here */}
-                    {this.findIntersection()}
+                    {this.renderLabels(this.findIntersection())}
                 </div>
 
             </div>
