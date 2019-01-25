@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const CALLBACK_URL = "https://localhost:3000/";
+const CALLBACK_URL = "http://localhost:3000/app/";
 
 class Home extends Component {
     render() {
@@ -19,3 +19,5 @@ class Home extends Component {
     }
 }
 
+
+export default Home;

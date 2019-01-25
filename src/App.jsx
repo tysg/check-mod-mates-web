@@ -41,6 +41,10 @@ class Content extends Component {
 
     }
 
+    componentDidMount() {
+        this.props.getNamelist();
+    }
+
     render() {
         const module_buttons = this.props.courseCode.map(
             (value, index) => {
@@ -57,7 +61,6 @@ class Content extends Component {
 
         return (
             <div>
-                <button onClick={() => this.props.getNamelist()}>Test</button>
                 <div className="buttons">
                     {module_buttons}
                 </div>
@@ -77,7 +80,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isInitiated: false,
+            isInitialized: false,
             buttonState: null,
             ID: null,
             courseCode: null,
@@ -89,14 +92,25 @@ class App extends Component {
 
     }
 
+    componentDidMount() {
+        console.log(this.props);
+        if (!this.state.isInitialized) { this.initialize() };
+
+    }
 
     initialize() {
-        const token = queryString.parse(this.props.token).token
-        console.log(token);
+        this.props.history.push("/app")
+        const token = queryString.parse(this.props.location.search).token
+        this.setState({
+            token: token,
+        })
+
+        console.log(this.state.token);
 
         const url = "https://ivle.nus.edu.sg/api/Lapi.svc/Modules?APIKey=" +
             key + "&AuthToken=" +
             token + "&Duration=10&IncludeAllInfo=false";
+
 
         return fetch(url)
             .then(resp => resp.json())
@@ -104,7 +118,7 @@ class App extends Component {
                 console.log(data);
                 this.setState((state) => {
                     return {
-                        isInitiated: true,
+                        isInitialized: true,
                         buttonState: Array(data.Results.length).fill(false),
                         courseCode: data.Results.map(obj => obj.CourseCode),
                         ID: data.Results.map(obj => obj.ID),
@@ -115,8 +129,12 @@ class App extends Component {
     }
 
 
+
     getNamelist() {
-        const token = queryString.parse(this.props.token).token
+
+        // const token = queryString.parse(this.props.location.search).token
+        const token = this.state.token
+
         console.log(token);
         const urls = id => "https://ivle.nus.edu.sg/API/Lapi.svc/Class_Roster?APIKey=" + key + "&AuthToken=" + token + "&CourseID=" + id
 
@@ -155,12 +173,12 @@ class App extends Component {
         return (
             <div>
                 <div className="main">
-                    <button onClick={() => this.initialize()}>Refresh</button>
+                    {/* <button onClick={() => this.initialize()}>Initialize</button> */}
                 </div>
 
 
                 <div>
-                    {(this.state.isInitiated)
+                    {(this.state.isInitialized)
                         ? <Content
                             buttonState={this.state.buttonState}
                             courseCode={this.state.courseCode}
