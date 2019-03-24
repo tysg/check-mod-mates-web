@@ -3,7 +3,7 @@ import queryString from 'query-string'
 import './App.css';
 import { Button, Label } from 'semantic-ui-react'
 
-const key = "EKCnWpNMgPfzGr9psFhqq"; // key is constant
+const key = "EKCnWpNMgPfzGr9psFhqq"; // key is constant, used in constructing API calls
 
 function Toggle(props) {
     return (
@@ -14,8 +14,6 @@ function Toggle(props) {
 }
 
 class Content extends Component {
-
-
     findIntersection() {
         // refer to the global name_list var, and compare with buttonState
         // return the intersection in an array
@@ -34,16 +32,17 @@ class Content extends Component {
                 (accum, current) => accum.filter(x => current.includes(x))
             )
         }
-
         catch (TypeError) {
+            // type error is safely ignored
             return;
         }
 
     }
 
     renderLabels(array) {
+        // each label contains a name
         if (array) {
-            console.log(typeof (array))
+            // console.log(typeof (array))
             return array.map(
                 (value, index) => {
                     return (<Label key={index}>{value}</Label>)
@@ -60,7 +59,6 @@ class Content extends Component {
         const module_buttons = this.props.courseCode.map(
             (value, index) => {
                 return (
-                    // <button key={index}>{value}</button>
                     <Toggle
                         onClick={() => this.props.onClick(index)}
                         isToggleOn={this.props.buttonState[index]}
@@ -76,7 +74,7 @@ class Content extends Component {
                     {module_buttons}
                 </div>
                 <div>
-                    {/* list of namesd here */}
+                    {/* list of names here */}
                     {this.renderLabels(this.findIntersection())}
                 </div>
 
@@ -104,19 +102,20 @@ class App extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
+        // console.log(this.props);
         if (!this.state.isInitialized) { this.initialize() };
 
     }
 
     initialize() {
+        // clear the token in the address field
         this.props.history.push("/app")
         const token = queryString.parse(this.props.location.search).token
         this.setState({
             token: token,
         })
 
-        console.log(this.state.token);
+        // console.log(this.state.token);
 
         const url = "https://ivle.nus.edu.sg/api/Lapi.svc/Modules?APIKey=" +
             key + "&AuthToken=" +
@@ -126,7 +125,7 @@ class App extends Component {
         return fetch(url)
             .then(resp => resp.json())
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 this.setState((state) => {
                     return {
                         isInitialized: true,
@@ -146,24 +145,17 @@ class App extends Component {
         // const token = queryString.parse(this.props.location.search).token
         const token = this.state.token
 
-        console.log(token);
+        // console.log(token);
         const urls = id => "https://ivle.nus.edu.sg/API/Lapi.svc/Class_Roster?APIKey=" + key + "&AuthToken=" + token + "&CourseID=" + id
-
-
-
         this.state.ID.map(
             id => fetch(urls(id))
                 .then(resp => resp.json())
                 .then(data => this.setState(
                     (state) => {
-                        console.log(data);
-
+                        // // console.log(data);
                         let nameList = { ...state.nameList }
                         nameList[id] = data.Results.map(obj => obj.Name)
-                        // const nameList = state.nameList.concat(
-                        //     [{ [id]: data.Results.map(i => i.Name) }])
                         return { nameList }
-
                     }
                 ))
         )
@@ -183,24 +175,17 @@ class App extends Component {
     render() {
         return (
             <div>
-                <div className="main">
-                    {/* <button onClick={() => this.initialize()}>Initialize</button> */}
-                </div>
-
-
-                <div>
-                    {(this.state.isInitialized)
-                        ? <Content
-                            buttonState={this.state.buttonState}
-                            courseCode={this.state.courseCode}
-                            onClick={i => this.handlesClick(i)}
-                            getNamelist={this.getNamelist}
-                            nameList={this.state.nameList}
-                            id={this.state.ID}
-                        />
-                        : null}
-                </div>
-            </div >
+                {(this.state.isInitialized)
+                    ? <Content
+                        buttonState={this.state.buttonState}
+                        courseCode={this.state.courseCode}
+                        onClick={i => this.handlesClick(i)}
+                        getNamelist={this.getNamelist}
+                        nameList={this.state.nameList}
+                        id={this.state.ID}
+                    />
+                    : null}
+            </div>
         );
     }
 

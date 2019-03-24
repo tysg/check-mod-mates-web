@@ -1,7 +1,3 @@
-Go to https://ivle.nus.edu.sg/api/login/?apikey=EKCnWpNMgPfzGr9psFhqq&url=http://localhost:3000/ to start
-
-
----
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

@@ -3,38 +3,12 @@ import React, { Component } from 'react';
 import {
     Button,
     Container,
-    Divider,
-    Grid,
     Header,
     Icon,
-    Image,
-    List,
-    Menu,
-    Responsive,
     Segment,
-    Sidebar,
-    Visibility,
 } from 'semantic-ui-react'
 
-
 const CALLBACK_URL = "http://localhost:3000/app/";
-
-class HomeLegacy extends Component {
-    render() {
-        return (
-            <div>
-                <div>
-                    Check Module mates
-                </div>
-
-                <div>
-                    <a href={"https://ivle.nus.edu.sg/api/login/?apikey=EKCnWpNMgPfzGr9psFhqq&url=" + CALLBACK_URL}>Click here</a>
-                </div>
-
-            </div>
-        )
-    }
-}
 
 class Home extends Component {
     render() {
@@ -49,7 +23,7 @@ class Home extends Component {
                     height: 100%;
                     }   
                     
-    `}</style>
+                 `}</style>
                 <Segment style={{
                     background: '#dfdce3',
                     marginTop: '0px',
@@ -95,7 +69,6 @@ class Home extends Component {
         );
     }
 }
-
 
 
 export default Home;
