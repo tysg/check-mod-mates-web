@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import { Button, Label } from 'semantic-ui-react'
 import queryString from 'query-string'
 import './App.css';
-import { Button, Label } from 'semantic-ui-react'
 
 const key = "EKCnWpNMgPfzGr9psFhqq"; // key is constant, used in constructing API calls
 
@@ -14,11 +14,17 @@ function Toggle(props) {
 }
 
 class Content extends Component {
+    // Content takes in name lists as props. It handles the processing of the name lists and presentation
+    componentDidMount() {
+        this.props.getNamelist();
+    }
+
     findIntersection() {
         // refer to the global name_list var, and compare with buttonState
         // return the intersection in an array
         const name_obj = this.props.nameList;
         const id_list = this.props.id;
+
         const selectedLists = []
         for (let i = 0; i < this.props.buttonState.length; i++) {
             if (this.props.buttonState[i]) {
@@ -27,13 +33,14 @@ class Content extends Component {
             }
         }
 
+
         try {
+            // 
             return selectedLists.reduce(
                 (accum, current) => accum.filter(x => current.includes(x))
             )
-        }
-        catch (TypeError) {
-            // type error is safely ignored
+        } catch (TypeError) {
+            // Type Error occurs when processing empty arrays 
             return;
         }
 
@@ -51,9 +58,6 @@ class Content extends Component {
         }
     }
 
-    componentDidMount() {
-        this.props.getNamelist();
-    }
 
     render() {
         const module_buttons = this.props.courseCode.map(
@@ -86,6 +90,7 @@ class Content extends Component {
 }
 
 class App extends Component {
+    // App class handles fetching all module lists and respective name lists
     constructor(props) {
         super(props);
         this.state = {
@@ -102,7 +107,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        // console.log(this.props);
+        // initialise the page once its loaded 
         if (!this.state.isInitialized) { this.initialize() };
 
     }
@@ -115,17 +120,14 @@ class App extends Component {
             token: token,
         })
 
-        // console.log(this.state.token);
-
         const url = "https://ivle.nus.edu.sg/api/Lapi.svc/Modules?APIKey=" +
             key + "&AuthToken=" +
             token + "&Duration=10&IncludeAllInfo=false";
 
 
         return fetch(url)
-            .then(resp => resp.json())
+            .then(response => response.json())
             .then(data => {
-                // console.log(data);
                 this.setState((state) => {
                     return {
                         isInitialized: true,
@@ -141,18 +143,14 @@ class App extends Component {
 
 
     getNamelist() {
-
-        // const token = queryString.parse(this.props.location.search).token
         const token = this.state.token
 
-        // console.log(token);
         const urls = id => "https://ivle.nus.edu.sg/API/Lapi.svc/Class_Roster?APIKey=" + key + "&AuthToken=" + token + "&CourseID=" + id
         this.state.ID.map(
             id => fetch(urls(id))
                 .then(resp => resp.json())
                 .then(data => this.setState(
                     (state) => {
-                        // // console.log(data);
                         let nameList = { ...state.nameList }
                         nameList[id] = data.Results.map(obj => obj.Name)
                         return { nameList }
